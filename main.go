@@ -15,12 +15,13 @@ type testcase struct {
 var variables []string
 
 func main() {
-	variables = []string{"x", "y"}
+	variables = []string{"x"}
 	testcases := []testcase{
-		testcase{variables: map[string]float64{"x": 0, "y": 0}, expected: 0},
-		testcase{variables: map[string]float64{"x": 1, "y": 1}, expected: 2},
-		testcase{variables: map[string]float64{"x": 2, "y": 4}, expected: 6},
-		testcase{variables: map[string]float64{"x": 3, "y": 9}, expected: 12}}
+		testcase{variables: map[string]float64{"x": 0}, expected: 0},
+		testcase{variables: map[string]float64{"x": 1}, expected: 0},
+		testcase{variables: map[string]float64{"x": 2}, expected: 1},
+		testcase{variables: map[string]float64{"x": 3}, expected: 3},
+		testcase{variables: map[string]float64{"x": 4}, expected: 6}}
 
 	rand.Seed(time.Now().Unix())
 	tree := &mathFunc{op: newOperator()}
@@ -34,7 +35,7 @@ func main() {
 		generations++
 		tree = tree.evolve(testcases)
 		if tree.currentError < lastError {
-			fmt.Printf("Organism %d, generation %d, error=%f\n", organism, generations, tree.currentError)
+			fmt.Printf("Organism %d, generation %d, error=%f => %s\n", organism, generations, tree.currentError, tree.toString())
 		}
 		lastError = tree.currentError
 
@@ -47,7 +48,7 @@ func main() {
 			generations = 0
 			organism++
 			if organism > 10 {
-				timeToLive = int(float64(timeToLive) * 1.5)
+				timeToLive = int(float64(timeToLive) * 2)
 				fmt.Printf("Too many organisms, adjusting time to live to %d\n", timeToLive)
 				organism = 0
 			}

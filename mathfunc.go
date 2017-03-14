@@ -22,7 +22,7 @@ func (mf *mathFunc) mutate() {
 	if chance(50) {
 		mf.op.mutate()
 	}
-	if chance(200) {
+	if chance(5000) {
 		mf.op = newOperator()
 	}
 	if chance(500) {
