@@ -7,10 +7,9 @@ import (
 
 type mathValue float64
 
-func newMathValue() *mathValue {
-	value := mathValue(0)
-	value.mutateValue()
-	return &value
+func newMathValue(value float64) *mathValue {
+	v := mathValue(value)
+	return &v
 }
 
 func (value *mathValue) clone() mutator {
@@ -26,7 +25,7 @@ func (value *mathValue) mutateValue() {
 	*value = mathValue((rand.Float64() - 0.5) * 10)
 }
 
-func (value *mathValue) mutate(variableValues map[string]float64) {
+func (value *mathValue) mutate() {
 	if chance(100) {
 		value.mutateValue()
 	}
@@ -37,4 +36,8 @@ func (value *mathValue) mutate(variableValues map[string]float64) {
 
 func (value *mathValue) toString() string {
 	return fmt.Sprintf("%f", float64(*value))
+}
+
+func (value *mathValue) reduce() mutator {
+	return value
 }

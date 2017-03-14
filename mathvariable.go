@@ -1,17 +1,14 @@
 package main
 
-import (
-	"math/rand"
-	"reflect"
-)
+import "math/rand"
 
 type mathVariable struct {
 	name string
 }
 
-func newMathVariable(variableValues map[string]float64) *mathVariable {
+func newMathVariable() *mathVariable {
 	newVar := &mathVariable{}
-	newVar.mutateValue(variableValues)
+	newVar.mutateValue()
 	return newVar
 }
 
@@ -23,17 +20,20 @@ func (mvar *mathVariable) evaluate(variableValues map[string]float64) float64 {
 	return variableValues[mvar.name]
 }
 
-func (mvar *mathVariable) mutateValue(variableValues map[string]float64) {
-	keys := reflect.ValueOf(variableValues).MapKeys()
-	mvar.name = keys[rand.Intn(len(keys))].String()
+func (mvar *mathVariable) mutateValue() {
+	mvar.name = variables[rand.Intn(len(variables))]
 }
 
-func (mvar *mathVariable) mutate(variableValues map[string]float64) {
+func (mvar *mathVariable) mutate() {
 	if chance(100) {
-		mvar.mutateValue(variableValues)
+		mvar.mutateValue()
 	}
 }
 
 func (mvar *mathVariable) toString() string {
 	return mvar.name
+}
+
+func (mvar *mathVariable) reduce() mutator {
+	return mvar
 }

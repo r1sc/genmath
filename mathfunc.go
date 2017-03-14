@@ -5,7 +5,7 @@ import (
 )
 
 type mathFunc struct {
-	op           *mathBinaryOp
+	op           mutator
 	currentError float64
 }
 
@@ -18,22 +18,30 @@ func (mf *mathFunc) evaluate(variables map[string]float64) float64 {
 	return mf.op.evaluate(variables)
 }
 
-func (mf *mathFunc) mutate(variables []string) {
-	if chance(100) {
-		newop := newOperator(variables)
+func (mf *mathFunc) mutate() {
+	if chance(50) {
+		mf.op.mutate()
+	}
+	if chance(200) {
+		mf.op = newOperator()
+	}
+	if chance(500) {
+		newop := newOperator()
 		newop.left = mf.op
 		mf.op = newop
 	}
-	if chance(50) {
-		mf.op.mutate(variables)
+	if chance(500) {
+		newop := newOperator()
+		newop.right = mf.op
+		mf.op = newop
 	}
 }
 
-func (mf *mathFunc) evolve(variables []string, testcases []testcase) *mathFunc {
+func (mf *mathFunc) evolve(testcases []testcase) *mathFunc {
 	mf.currentError = 0
 
 	clone := mf.clone()
-	clone.mutate(variables)
+	clone.mutate()
 
 	for _, testcase := range testcases {
 		val := mf.evaluate(testcase.variables)
@@ -50,4 +58,9 @@ func (mf *mathFunc) evolve(variables []string, testcases []testcase) *mathFunc {
 
 func (mf *mathFunc) toString() string {
 	return mf.op.toString()
+}
+
+func (mf *mathFunc) reduce() *mathFunc {
+	mf.op = mf.op.reduce()
+	return mf
 }
