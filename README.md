@@ -1,0 +1,1 @@
+This is a go implementation based on the work of Roger Johansson (https://rogerjohansson.blog/2008/02/07/genetic-programming-math/)
